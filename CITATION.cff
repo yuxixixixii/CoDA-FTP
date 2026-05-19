@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this artifact, please cite the corresponding paper."
+title: "CoDA-FTP: Conservative Domain Adaptation for Cross-Project Flaky-Test Prediction"
+authors:
+  - family-names: Zhang
+    given-names: Yu
+    orcid: "https://orcid.org/0009-0007-2857-8890"
+  - family-names: Lei
+    given-names: Yan
+    orcid: "https://orcid.org/0000-0003-4504-6806"
+  - family-names: Xie
+    given-names: Huan
+date-released: 2026-05-19
+license: "Apache-2.0"

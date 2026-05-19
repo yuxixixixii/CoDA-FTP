@@ -1,0 +1,9 @@
+.DS_Store
+.venv/
+__pycache__/
+*.pyc
+outputs/
+.git/
+.pytest_cache/
+.mypy_cache/
+*.log
