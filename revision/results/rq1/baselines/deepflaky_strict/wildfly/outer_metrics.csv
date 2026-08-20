@@ -1,0 +1,2 @@
+threshold,TN,FP,FN,TP,precision,recall,f1,target_project,selected_sources,selected_threshold,num_tests
+0.9,939,31,18,5,0.1388888888888889,0.21739130434782608,0.1694915254237288,wildfly,"logback,orbit,spring-boot,undertow,wro4j,zxing",0.9,993

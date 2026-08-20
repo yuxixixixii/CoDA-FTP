@@ -1,0 +1,2 @@
+threshold,TN,FP,FN,TP,precision,recall,f1,target_project,selected_sources,selected_threshold,num_tests
+0.65,2071,43,14,5,0.10416666666666667,0.2631578947368421,0.14925373134328357,incubator-dubbo,"assertj-core,commons-exec,elastic-job-lite,handlebars.java,httpcore,java-websocket",0.65,2133

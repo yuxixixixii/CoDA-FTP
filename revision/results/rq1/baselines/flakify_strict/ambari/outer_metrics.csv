@@ -1,0 +1,2 @@
+threshold,TN,FP,FN,TP,precision,recall,f1,target_project,selected_sources,selected_threshold,num_tests
+0.8,204,63,8,38,0.37623762376237624,0.8260869565217391,0.5170068027210885,ambari,"activiti,alluxio,assertj-core,hbase,http-request,incubator-dubbo",0.8,313

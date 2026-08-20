@@ -1,0 +1,2 @@
+threshold,TN,FP,FN,TP,precision,recall,f1,target_project,selected_sources,selected_threshold,num_tests
+0.9,671,19,5,17,0.4722222222222222,0.7727272727272727,0.5862068965517242,httpcore,"commons-exec,elastic-job-lite,handlebars.java,http-request,incubator-dubbo,java-websocket",0.9,712

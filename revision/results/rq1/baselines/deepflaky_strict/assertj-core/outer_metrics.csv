@@ -1,0 +1,2 @@
+threshold,TN,FP,FN,TP,precision,recall,f1,target_project,selected_sources,selected_threshold,num_tests
+0.9,4118,2086,0,1,0.0004791566842357451,1.0,0.0009578544061302683,assertj-core,"activiti,ambari,elastic-job-lite,handlebars.java,httpcore,incubator-dubbo",0.9,6205

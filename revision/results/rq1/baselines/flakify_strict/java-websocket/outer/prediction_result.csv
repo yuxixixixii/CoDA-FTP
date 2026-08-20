@@ -1,0 +1,2 @@
+project_name,Accuracy,F1,Precision,Recall,AUC,TN,FP,FN,TP
+java-websocket,0.8068965517241379,0,0,0,0.1397006414825374,117,5,23,0

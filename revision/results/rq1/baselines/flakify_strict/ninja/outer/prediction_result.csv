@@ -1,0 +1,2 @@
+project_name,Accuracy,F1,Precision,Recall,AUC,TN,FP,FN,TP
+ninja,0.9804560260586319,0,0,0,0.9084967320261438,301,5,1,0

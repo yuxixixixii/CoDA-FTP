@@ -1,0 +1,2 @@
+project_name,Accuracy,F1,Precision,Recall,AUC,TN,FP,FN,TP
+zxing,0.9942028985507246,0,0,0,0.6705539358600584,343,0,2,0

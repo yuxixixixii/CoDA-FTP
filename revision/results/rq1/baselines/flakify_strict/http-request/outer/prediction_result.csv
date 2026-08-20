@@ -1,0 +1,2 @@
+project_name,Accuracy,F1,Precision,Recall,AUC,TN,FP,FN,TP
+http-request,0.8711656441717791,0,0,0,0.6881226053639846,142,3,18,0

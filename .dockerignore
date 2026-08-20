@@ -3,6 +3,7 @@
 __pycache__/
 *.pyc
 outputs/
+data/processed_data_with_vocabulary_per_test.csv
 .git/
 .pytest_cache/
 .mypy_cache/

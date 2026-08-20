@@ -1,38 +1,28 @@
 # Data
 
-This artifact contains the precomputed fused dataset used by the released
-CoDA-FTP script:
-
-- `data/processed_data_with_vocabulary_per_test.csv`
-- `data/FlakeFlaggerFeaturesTypes.csv`
-
-The fused CSV includes project metadata, flaky labels, FlakeFlagger expert
-features, and a serialized CodeBERT semantic vector in the
-`semantic_representation` column. The released script uses the precomputed
-features directly and does not re-extract CodeBERT representations.
-
-## Large file handling
-
-`processed_data_with_vocabulary_per_test.csv` is approximately 268 MB, which
-exceeds GitHub's normal 100 MB file limit. The repository is configured to track
-this file with Git LFS through `.gitattributes`:
-
-```text
-data/processed_data_with_vocabulary_per_test.csv filter=lfs diff=lfs merge=lfs -text
-```
-
-Before pushing the repository, install and initialize Git LFS:
-
-```bash
-git lfs install
-git lfs track "data/processed_data_with_vocabulary_per_test.csv"
-git add .gitattributes data/processed_data_with_vocabulary_per_test.csv
-```
-
-If Git LFS is not available, do not push the CSV directly. Instead, upload it as
-a GitHub Release asset or to an archival service such as Zenodo, and keep the
-same relative path after downloading:
+The strict runner uses a precomputed fused feature CSV containing project and
+test metadata, flaky labels, 22 FlakeFlagger expert features, and a serialized
+768-dimensional CodeBERT representation:
 
 ```text
 data/processed_data_with_vocabulary_per_test.csv
 ```
+
+It contains 21,413 tests from 23 projects and is approximately 268 MB. It is
+tracked with Git LFS, not ordinary Git. After cloning the tagged release, run:
+
+```bash
+git lfs install
+git lfs pull
+```
+
+The expected SHA-256 is
+`5d31cc607585f34b43ee7eb1c5dac9c5e654f06fd36b7ea19ca7acf24ca0f3b2`.
+Retain the file at the path above.
+
+`data/FlakeFlaggerFeaturesTypes.csv` is versioned in the repository and lists
+the expert feature columns. The runner consumes the precomputed representation
+directly; it does not fetch CodeBERT or re-extract test-method embeddings.
+
+The archive under `revision/results/` permits audit of reported predictions and
+selection decisions without redistributing another copy of the input data.

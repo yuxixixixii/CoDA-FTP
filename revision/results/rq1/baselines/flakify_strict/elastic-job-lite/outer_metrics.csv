@@ -1,0 +1,2 @@
+threshold,TN,FP,FN,TP,precision,recall,f1,target_project,selected_sources,selected_threshold,num_tests
+0.75,504,51,2,1,0.019230769230769232,0.3333333333333333,0.03636363636363637,elastic-job-lite,"commons-exec,handlebars.java,hbase,hector,http-request,httpcore",0.75,558

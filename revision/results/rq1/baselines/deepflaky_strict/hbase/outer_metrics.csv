@@ -1,0 +1,2 @@
+threshold,TN,FP,FN,TP,precision,recall,f1,target_project,selected_sources,selected_threshold,num_tests
+0.9,250,34,25,120,0.7792207792207793,0.8275862068965517,0.802675585284281,hbase,"alluxio,commons-exec,elastic-job-lite,handlebars.java,hector,http-request",0.9,429

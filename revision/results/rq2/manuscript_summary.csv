@@ -1,0 +1,11 @@
+family,variant,TP,FN,FP,TN,precision,recall,F1,ROC_AUC,protocol_note
+component,Full CoDA-FTP,375,349,228,20461,0.62,0.52,0.57,0.93,strict source-only nested with source-fitted z-score
+component,w/o source selection,232,492,944,19745,0.20,0.32,0.24,,same protocol except no target-aware source selection
+component,w/o CORAL,364,360,412,20277,0.47,0.50,0.49,,same protocol except no CORAL alignment
+component,w/o regularized XGBoost,295,429,163,20526,0.64,0.41,0.50,,same protocol except unregularized XGBoost candidate set
+component,w/o source selection and CORAL,197,527,3168,17521,0.06,0.27,0.10,,same protocol except both named components removed
+representation,w/o CodeBERT (expert only),60,664,1070,19619,0.05,0.08,0.06,,same protocol with only 22 expert features
+representation,w/o expert features (CodeBERT only),358,366,245,20444,0.59,0.49,0.54,0.87,same protocol with only 768 semantic features
+transfer,Selected-source TCA (linear MMD),335,389,383,20306,0.47,0.46,0.47,0.88,source-only XGBoost and threshold selection
+transfer,Selected-source DANN (nonlinear),463,261,480,20209,0.49,0.64,0.555,0.90,label-isolated encoder/training and threshold selection
+transfer,Selected-source CORAL (CoDA-FTP),375,349,228,20461,0.62,0.52,0.57,0.93,strict primary protocol

@@ -1,161 +1,102 @@
-# CoDA-FTP
+# CoDA-FTP replication package
 
-CoDA-FTP is a conservative domain adaptation pipeline for cross-project flaky
-test prediction. For each held-out target project, it selects target-relevant
-source projects, aligns the selected source distribution to the target
-distribution with CORAL, and trains a regularized XGBoost classifier.
+This repository is the replication package for the revised CoDA-FTP manuscript,
+*Conservative Domain Adaptation for Cross-Project Flaky-Test Prediction*. The
+current revision is deliberately separate from the earlier `CoDA-FTP` release:
+it replaces that release's fixed, target-label-informed operating point with
+the strict source-only nested evaluation reported in the revision.
 
-This repository contains a standalone artifact for reproducing the main
-CoDA-FTP configuration reported in the paper.
+**Use the release tag `jss-revision-2026-08-20` when reproducing the revised
+manuscript.** The repository history retains the earlier artifact for the
+original submission, but its `0.65` fixed-threshold result must not be compared
+with, or cited as, a result from the revision.
 
-## Repository Layout
+## What is included
 
-```text
-.
-├── data/
-│   ├── FlakeFlaggerFeaturesTypes.csv
-│   └── processed_data_with_vocabulary_per_test.csv
-├── scripts/
-│   └── run_main.sh
-├── src/
-│   └── coda_ftp.py
-├── outputs/
-│   └── .gitkeep
-├── DATA.md
-├── Dockerfile
-├── RELEASE_CHECKLIST.md
-├── requirements.txt
-└── VERIFICATION.md
-```
+* the executable primary runner in `src/coda_ftp.py`;
+* source-only scripts for the primary run, fixed-$k$ sensitivity, component
+  diagnostics, TCA, DANN, project-level statistics, and partial-target audit;
+* archived primary predictions, fold-specific source-only decisions, strict
+  Flakify and DeepFlaky outer-fold metrics, statistical outputs, partial-target
+  audit results, and LLM aggregate outputs; and
+* a verification program that recomputes the archived RQ1 aggregates and
+  checks them against the revised manuscript.
 
-The released script uses precomputed fused features. It does not re-extract
-CodeBERT representations.
+The fused input data are not committed because the CSV is approximately 268 MB.
+Obtain it as described in [DATA.md](DATA.md), then place it at
+`data/processed_data_with_vocabulary_per_test.csv`.
 
-## Data
+## Strict evaluation protocol
 
-The main fused CSV contains:
+Each of the 23 projects is held out once. For the held-out target, CoDA-FTP:
 
-- project name, test name, and flaky label;
-- FlakeFlagger expert features;
-- precomputed CodeBERT semantic representation serialized in
-  `semantic_representation`.
+1. selects the submitted fixed nearest-six source projects using unlabeled,
+   source-fitted z-scored fused features;
+2. uses only those source projects in leave-one-source-project-out pseudo-target
+   validation to choose one XGBoost configuration and one threshold from
+   0.30--0.90; and
+3. fits CORAL, SMOTE, and the chosen XGBoost model using the selected sources,
+   then reads target labels only for final scoring.
 
-The fused CSV is about 268 MB and must be uploaded through Git LFS or published
-as a release artifact. See `DATA.md`.
+The archived primary result is **TP=375, FN=349, FP=228, TN=20,461**
+(62% precision, 52% recall, 57% F1). Full fold-level decisions are in
+`revision/results/rq1/coda_ftp/source_only_model_selection.csv`.
 
-## Environment
+## Quick checks
 
-Python 3.12 is recommended. The verified environment used:
-
-```text
-Python 3.12.3
-numpy 1.26.4
-pandas 2.3.3
-scikit-learn 1.6.1
-scipy 1.15.3
-imbalanced-learn 0.14.1
-xgboost 3.2.0
-```
-
-Install locally:
+Install the Python dependencies and run the archive check:
 
 ```bash
-python3.12 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
+python revision/scripts/verify_archived_results.py
 ```
 
-## Run CoDA-FTP
+It verifies the main CoDA-FTP and strict neural-baseline confusion matrices
+against the revision's reported totals. This command is deterministic and does
+not need the large fused CSV.
 
-From the repository root:
+To rerun the strict primary experiment after obtaining the data:
 
 ```bash
-bash scripts/run_main.sh
+PYTHON_BIN=python bash scripts/run_main.sh
 ```
 
-Equivalent explicit command:
+The run is computationally intensive: each outer project performs source-only
+pseudo-target validation across five pre-specified XGBoost configurations and
+13 candidate thresholds. Outputs are written to `outputs/coda_ftp_primary/`.
+The deterministic execution command is also recorded in
+`revision/scripts/run_primary_strict_source_only.sh`.
+
+For a containerized run, build without the large data file and mount the
+downloaded `data/` directory:
 
 ```bash
-python src/coda_ftp.py \
-  --data data/processed_data_with_vocabulary_per_test.csv \
-  --feature-list data/FlakeFlaggerFeaturesTypes.csv \
-  --output-dir outputs/coda_ftp_main \
-  --top-k 6 \
-  --min-projects 3 \
-  --use-coral \
-  --coral-reg 0.001 \
-  --smote-ratio 0.075 \
-  --smote-k-neighbors 3 \
-  --threshold 0.65 \
-  --n-estimators 100 \
-  --scale-pos-weight 3 \
-  --max-depth 3 \
-  --min-child-weight 10 \
-  --gamma 5 \
-  --subsample 0.8 \
-  --colsample-bytree 0.8 \
-  --reg-lambda 10 \
-  --random-state 8 \
-  --xgb-n-jobs 32 \
-  --xgb-tree-method hist
+docker build -t coda-ftp-revision .
+docker run --rm \
+  -v "$PWD/data:/artifact/data:ro" \
+  -v "$PWD/outputs:/artifact/outputs" \
+  coda-ftp-revision
 ```
 
-The script writes:
+## Result archive
 
-- `outputs/coda_ftp_main/prediction_result.csv`
-- `outputs/coda_ftp_main/prediction_result_by_project.csv`
-- `outputs/coda_ftp_main/prediction_result_per_test.csv`
-- `outputs/coda_ftp_main/runtime_seconds.txt`
+`revision/results/` is an auditable snapshot of the revision:
 
-Expected aggregate result for the bundled data under the verified Linux/Python
-3.12 environment:
+| Directory | Contents |
+| --- | --- |
+| `rq1/coda_ftp/` | primary aggregate, per-project and per-test predictions, and source-only selection records |
+| `rq1/baselines/` | strict Flakify/DeepFlaky outer-fold metrics and source-only traditional baseline summaries |
+| `statistics/` | exact paired tests and project-cluster bootstrap intervals |
+| `rq2/` | the manuscript's strict component/representation and transfer-operator summary tables |
+| `rq3/` | partial-target sensitivity audit |
+| `llm/` | frozen zero-shot/four-shot aggregate outputs and source-only four-shot examples |
 
-```text
-TP=317, FN=407, FP=138, TN=20551
-Precision=69.7%, Recall=43.8%, F1=53.8%, AUC=91.6%
-```
+The LLM values are supplementary prompt-only reference results, not matched
+model-selection baselines. Their configuration and limitations are documented
+in `revision/LLM_PROTOCOL.md`.
 
-Rounded format: Precision 70%, Recall 44%, F1 54%, AUC 92%.
+## Citations and licenses
 
-## Docker Reproduction
-
-Docker is recommended when reproducing the released artifact. On Apple Silicon,
-keep `--platform linux/amd64` to use the verified x86_64 Linux environment.
-
-```bash
-docker build --platform linux/amd64 -t coda-ftp-artifact .
-
-docker run --rm --platform linux/amd64 \
-  -v "$PWD/outputs/docker_coda_ftp_main:/artifact/outputs/coda_ftp_main" \
-  coda-ftp-artifact
-```
-
-The Docker run writes results to `outputs/docker_coda_ftp_main/`.
-
-## Method Summary
-
-For each held-out target project, CoDA-FTP performs:
-
-1. fused representation construction from expert and CodeBERT features;
-2. target-aware source selection by standardized centroid distance;
-3. CORAL alignment of selected source features to the target feature
-   distribution;
-4. mild source-side SMOTE for rare flaky tests;
-5. regularized XGBoost training on selected aligned sources;
-6. fixed-threshold prediction on the target project.
-
-No target-project labels are used for source selection, CORAL alignment, SMOTE,
-training, or probability estimation. Target labels are used only after
-prediction for evaluation.
-
-## Reproducibility Notes
-
-XGBoost, SMOTE, BLAS/LAPACK, thread scheduling, and platform-level numeric
-differences can affect fixed-threshold confusion matrices. Use the pinned
-dependency versions and Docker setup for the closest reproduction. See
-`VERIFICATION.md` for the verified commands and outputs.
-
-## License
-
-This artifact is released under the Apache License 2.0. See `LICENSE`.
+The package is distributed under Apache-2.0. Please cite the corresponding
+paper and the upstream FlakeFlagger, Flakify, DeepFlaky, CodeBERT, CORAL, TCA,
+and DANN work when using their data, concepts, or reproduced architectures.

@@ -1,0 +1,2 @@
+threshold,TN,FP,FN,TP,precision,recall,f1,target_project,selected_sources,selected_threshold,num_tests
+0.3,65,6,35,81,0.9310344827586207,0.6982758620689655,0.7980295566502463,alluxio,"ambari,hbase,hector,http-request,okhttp,undertow",0.3,187

@@ -1,0 +1,2 @@
+threshold,TN,FP,FN,TP,precision,recall,f1,target_project,selected_sources,selected_threshold,num_tests
+0.3,1690,319,16,16,0.04776119402985075,0.5,0.08719346049046321,activiti,"achilles,ambari,assertj-core,httpcore,incubator-dubbo,java-websocket",0.3,2041

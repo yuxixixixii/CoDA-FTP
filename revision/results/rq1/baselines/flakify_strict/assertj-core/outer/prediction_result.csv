@@ -1,0 +1,2 @@
+project_name,Accuracy,F1,Precision,Recall,AUC,TN,FP,FN,TP
+assertj-core,0.9996776792908945,0,0,0,0.735170857511283,6203,1,1,0
